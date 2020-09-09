@@ -2,44 +2,56 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 const App = () => {
-  const course = "Half Stack application development";
-  const part1 = "Fundamentals of React";
-  const exercises1 = 10;
-  const part2 = "Using props to pass data";
-  const exercises2 = 7;
-  const part3 = "State of a component";
-  const exercises3 = 14;
-
-  const Header = () => {
-    return <h1>{course}</h1>;
+  const course = {
+    name: "Half Stack application development",
+    parts: [
+      {
+        name: "Fundamentals of React",
+        exercises: 10,
+      },
+      {
+        name: "Using props to pass data",
+        exercises: 7,
+      },
+      {
+        name: "State of a component",
+        exercises: 14,
+      },
+    ],
   };
 
-  const Part = (props) => {
+  const Header = ({ course }) => {
+    return <h1>{course.name}</h1>;
+  };
+
+  const Part = ({ parts }) => {
     return (
-      <p>
-        {props.part} {props.exercise}
-      </p>
+      <li>
+        {parts.name} {parts.exercises}
+      </li>
     );
   };
-  const Content = () => {
-    return (
-      <>
-        <Part part={part1} exercise={exercises1} />
-        <Part part={part2} exercise={exercises2} />
-        <Part part={part3} exercise={exercises3} />
-      </>
-    );
+  const Content = ({ parts }) => {
+    const newItems = parts.map((item) => {
+      return <Part parts={item} />;
+    });
+    return <ol> {newItems} </ol>;
   };
 
-  const Total = () => {
-    return <p>Number of exercises {exercises1 + exercises2 + exercises3}</p>;
+  const Total = ({ parts }) => {
+    let sum = 0;
+    parts.forEach((element) => {
+      sum += element.exercises;
+    });
+
+    return <p>{`Number of exercises ${sum} `}</p>;
   };
 
   return (
     <>
-      <Header />
-      <Content />
-      <Total />
+      <Header course={course} />
+      <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </>
   );
 };
