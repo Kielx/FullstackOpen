@@ -37,14 +37,16 @@ const App = () => {
       <Button handleClick={() => handleClick(bad, setBad)} name="bad"></Button>
       <h1>statistics</h1>
       {feedbackGiven === true ? (
-        <>
-          <Statistic text="good" states={states} />
-          <Statistic text="neutral" states={states} />
-          <Statistic text="bad" states={states} />
-          <Statistic text="allClicks" states={states} />
-          <Statistic text="average" states={states} />
-          <Statistic text="positivePercent" states={states} />
-        </>
+        <table>
+          <tbody>
+            <Statistic text="good" states={states} />
+            <Statistic text="neutral" states={states} />
+            <Statistic text="bad" states={states} />
+            <Statistic text="allClicks" states={states} />
+            <Statistic text="average" states={states} />
+            <Statistic text="positivePercent" states={states} />
+          </tbody>
+        </table>
       ) : (
         <p>No feedback given yet</p>
       )}

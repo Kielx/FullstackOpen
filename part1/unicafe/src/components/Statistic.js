@@ -4,25 +4,26 @@ const Statistic = (props) => {
   if (props.states.feedbackGiven === true) {
     if (props.text === "allClicks") {
       return (
-        <>
-          <p>{`You clicked ${props.states.allClicks} times`}</p>
-        </>
+        <tr>
+          <td>{`Number of feedbacks`}</td>
+          <td>{props.states.allClicks}</td>
+        </tr>
       );
     } else if (props.text === "average" && props.states.allClicks > 0) {
       return (
-        <>
-          <p>{`Average rating is ${
-            (props.states.good - props.states.bad) / props.states.allClicks
-          }`}</p>
-        </>
+        <tr>
+          <td>{`Average rating is`}</td>
+          <td>
+            {(props.states.good - props.states.bad) / props.states.allClicks}
+          </td>
+        </tr>
       );
     } else if (props.text === "positivePercent" && props.states.allClicks > 0) {
       return (
-        <>
-          <p>{`Positive percent of votes ${
-            (props.states.good * 100) / props.states.allClicks
-          }%`}</p>
-        </>
+        <tr>
+          <td>{`Positive percent of votes`}</td>
+          <td>{(props.states.good * 100) / props.states.allClicks}</td>
+        </tr>
       );
     } else if (
       props.text === "good" ||
@@ -30,13 +31,21 @@ const Statistic = (props) => {
       props.text === "neutral"
     ) {
       return (
-        <>
-          <p>
-            {props.text} {props.states[props.text]}
-          </p>
-        </>
+        <tr>
+          <td>{props.text} </td> <td>{props.states[props.text]}</td>
+        </tr>
       );
-    } else return "";
-  } else return "";
+    } else
+      return (
+        <tr>
+          <td></td>
+        </tr>
+      );
+  } else
+    return (
+      <tr>
+        <td></td>
+      </tr>
+    );
 };
 export default Statistic;
