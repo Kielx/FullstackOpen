@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import NextButton from "./components/NextButton";
 import VoteButton from "./components/VoteButton";
@@ -21,6 +21,7 @@ for (let i = 0; i < anecdotes.length; i++) {
 const App = (props) => {
   const [selected, setSelected] = useState(0);
   const [points, setPoints] = useState(myObj);
+  const [highest, setHighest] = useState(0);
 
   const handleNextAnecdoteClick = () => {
     let rand = Math.floor(Math.random() * anecdotes.length);
@@ -36,14 +37,24 @@ const App = (props) => {
     setPoints({ ...copy });
   };
 
+  useEffect(() => {
+    let test = Object.keys(points).reduce((a, b) =>
+      points[a] > points[b] ? a : b
+    );
+    setHighest(test);
+  }, [points]);
+
   return (
     <>
+      <h1>Anecdote of the day</h1>
       <p>{props.anecdotes[selected]}</p>
       <NextButton
         handleNextAnecdoteClick={handleNextAnecdoteClick}
       ></NextButton>
       <VoteButton handleVote={handleVote} points={points}></VoteButton>
       <p>has {points[selected]} votes</p>
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdotes[highest]}</p>
     </>
   );
 };
