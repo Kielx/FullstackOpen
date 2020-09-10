@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import Header from "./components/Header";
 import Button from "./components/Button";
+import Statistic from "./components/Statistic";
 
 const App = () => {
   // save clicks of each button to own state
@@ -9,13 +10,17 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
   const [allClicks, setAllClicks] = useState(0);
+  const [feedbackGiven, setFeedbackGiven] = useState(false);
+
+  const states = { good, neutral, bad, allClicks, feedbackGiven };
 
   useEffect(() => {
     setAllClicks(good + neutral + bad);
-  });
+  }, [good, bad, neutral]);
 
   const handleClick = (state, setState) => {
     setState(state + 1);
+    setFeedbackGiven(true);
   };
 
   return (
@@ -31,11 +36,18 @@ const App = () => {
       ></Button>
       <Button handleClick={() => handleClick(bad, setBad)} name="bad"></Button>
       <h1>statistics</h1>
-      <p>good {good} </p>
-      <p>neutral {neutral} </p>
-      <p>bad {bad} </p>
-      <p>allClicks {allClicks}</p>
-      <p>average {(good - bad) / allClicks} </p>
+      {feedbackGiven === true ? (
+        <>
+          <Statistic text="good" states={states} />
+          <Statistic text="neutral" states={states} />
+          <Statistic text="bad" states={states} />
+          <Statistic text="allClicks" states={states} />
+          <Statistic text="average" states={states} />
+          <Statistic text="positivePercent" states={states} />
+        </>
+      ) : (
+        <p>No feedback given yet</p>
+      )}
     </>
   );
 };
