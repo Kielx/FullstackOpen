@@ -1,14 +1,22 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import PersonsList from "./components/PersonsList";
+import Input from "./components/Input";
 
 const App = () => {
+  //state
   const [persons, setPersons] = useState([{ id: 1, name: "Arto Hellas" }]);
   const [newName, setNewName] = useState("");
+  const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [currId, setCurrId] = useState(2);
 
+  //helper functions
   const handleNameChange = (event) => {
     setNewName(event.target.value);
+  };
+
+  const handleNewPhoneNumber = (event) => {
+    setNewPhoneNumber(event.target.value);
   };
 
   const handleNewNameAdd = (event) => {
@@ -22,7 +30,13 @@ const App = () => {
     if (exists) {
       alert(`${newName} already exists`);
     } else {
-      setPersons(persons.concat({ id: currId, name: newName }));
+      setPersons(
+        persons.concat({
+          id: currId,
+          name: newName,
+          phone_number: newPhoneNumber,
+        })
+      );
       setCurrId(currId + 1);
     }
   };
@@ -31,14 +45,19 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <form>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          <button onClick={handleNewNameAdd} type="Submit">
-            add
-          </button>
-        </div>
+        <Input
+          val={newName}
+          changeHandler={handleNameChange}
+          name={"Name:"}
+        ></Input>
+        <Input
+          val={newPhoneNumber}
+          changeHandler={handleNewPhoneNumber}
+          name={"Phone number:"}
+        ></Input>
+        <button onClick={handleNewNameAdd} type="Submit">
+          Add new phonebook record
+        </button>
       </form>
       <h2>Numbers</h2>
       ...
