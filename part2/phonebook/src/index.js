@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import PersonsList from "./components/PersonsList";
 import Input from "./components/Input";
+import axios from "axios";
 
 const App = () => {
   //state
   const [persons, setPersons] = useState([{ id: 1, name: "Arto Hellas" }]);
   const [newName, setNewName] = useState("");
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
-  const [currId, setCurrId] = useState(2);
+  const [currId, setCurrId] = useState(4);
   const [filter, setFilter] = useState("");
   const [filterResult, setFilterResult] = useState([{}]);
 
@@ -39,7 +40,7 @@ const App = () => {
         persons.concat({
           id: currId,
           name: newName,
-          phone_number: newPhoneNumber,
+          number: newPhoneNumber,
         })
       );
       setCurrId(currId + 1);
@@ -47,6 +48,13 @@ const App = () => {
   };
 
   //useEffect
+
+  useEffect(() => {
+    let db = axios.get("http://localhost:3001/persons");
+    db.then((res) => {
+      setPersons(res.data);
+    });
+  }, []);
 
   useEffect(() => {
     const changeFilterResult = () => {

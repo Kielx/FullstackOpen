@@ -2,11 +2,11 @@ import React from "react";
 
 const PersonsList = ({ persons }) => {
   const newPersons = persons.map((person) => (
-    <li key={person.name}>
-      {person.name} {person.phone_number}
+    <li key={Math.random()}>
+      {person.name} {person.number}
     </li>
   ));
-  return newPersons;
+  return <ul>{newPersons}</ul>;
 };
 
 export default PersonsList;
