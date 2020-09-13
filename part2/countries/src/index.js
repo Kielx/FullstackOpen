@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import MyList from "./components/MyList";
 import Input from "./components/Input";
 import axios from "axios";
+import CountryDetails from "./components/CountryDetails";
 
 const App = () => {
   //state
@@ -36,7 +37,6 @@ const App = () => {
     };
     const checkIfTooMany = () => {
       if (filteredResults.length > 10) {
-        console.log("more than 10");
         setTooMany(true);
       } else {
         setTooMany(false);
@@ -51,7 +51,13 @@ const App = () => {
     <>
       <h1>Hello</h1>
       <Input val={filter} changeHandler={handleFilter} name="Filtr"></Input>
-      {tooMany ? "Too many results" : <MyList data={filteredResults}></MyList>}
+      {tooMany ? (
+        "Too many results"
+      ) : filteredResults.length === 1 ? (
+        <CountryDetails country={filteredResults[0]} />
+      ) : (
+        <MyList data={filteredResults}></MyList>
+      )}
     </>
   );
 };
