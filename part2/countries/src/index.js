@@ -49,10 +49,10 @@ const App = () => {
 
   return (
     <>
-      <h1>Hello</h1>
+      <h1>Find countries by country name</h1>
       <Input val={filter} changeHandler={handleFilter} name="Filtr"></Input>
       {tooMany ? (
-        "Too many results"
+        "Too many results, please narrow down your search"
       ) : filteredResults.length === 1 ? (
         <CountryDetails country={filteredResults[0]} />
       ) : (
