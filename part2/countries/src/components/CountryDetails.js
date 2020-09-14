@@ -1,6 +1,6 @@
 import React from "react";
 
-const CountryDetails = ({ country }) => {
+const CountryDetails = ({ country, weather }) => {
   let languages = country.languages.map((language) => (
     <li key={language.name}>{language.name}</li>
   ));
@@ -16,6 +16,7 @@ const CountryDetails = ({ country }) => {
         alt="Country Flag"
         style={{ maxWidth: "150px", border: "1px solid black" }}
       ></img>
+      <p>{`Current temperature in capital: ${weather}`}</p>
     </>
   );
 };

@@ -11,6 +11,7 @@ const App = () => {
   const [filter, setFilter] = useState("");
   const [filteredResults, setFilteredResults] = useState("");
   const [tooMany, setTooMany] = useState(false);
+  const [weather, setWeather] = useState("");
 
   const handleFilter = (event) => {
     setFilter(event.target.value);
@@ -47,6 +48,28 @@ const App = () => {
     checkIfTooMany();
   }, [filter, country, filteredResults.length]);
 
+  useEffect(() => {
+    const dispWeather = (country) => {
+      let weather = axios.get(
+        `http://api.weatherstack.com/current?access_key=${process.env.REACT_APP_WEATHERSTACK}&query=${country}`
+      );
+      weather
+        .then((res) => {
+          console.log(res);
+          if (res.data.current.temperature) {
+            setWeather(res.data.current.temperature);
+          }
+        })
+        .catch((reason) => {
+          console.log(reason);
+        });
+    };
+
+    filteredResults.length === 1
+      ? dispWeather(filteredResults[0].capital)
+      : console.log("false");
+  }, [filteredResults.length]);
+
   return (
     <>
       <h1>Find countries by country name</h1>
@@ -54,7 +77,9 @@ const App = () => {
       {tooMany ? (
         "Too many results, please narrow down your search"
       ) : filteredResults.length === 1 ? (
-        <CountryDetails country={filteredResults[0]} />
+        <>
+          <CountryDetails country={filteredResults[0]} weather={weather} />
+        </>
       ) : (
         <MyList data={filteredResults}></MyList>
       )}
