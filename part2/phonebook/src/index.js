@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import PersonsList from "./components/PersonsList";
 import Input from "./components/Input";
 import axios from "axios";
+import personsDBService from "./components/PersonsDBService";
 
 const App = () => {
   //state
@@ -35,13 +36,14 @@ const App = () => {
     if (exists) {
       alert(`${newName} already exists`);
     } else {
-      axios
-        .post("http://localhost:3001/persons", {
-          name: newName,
-          number: newPhoneNumber,
-        })
+      const personObject = {
+        name: newName,
+        number: newPhoneNumber,
+      };
+      personsDBService
+        .create(personObject)
         .then(function (response) {
-          setPersons(persons.concat(response.data));
+          setPersons(persons.concat(response));
           setNewName("");
           setNewPhoneNumber("");
         })
@@ -62,6 +64,7 @@ const App = () => {
 
   useEffect(() => {
     const changeFilterResult = () => {
+      console.log(persons);
       let filteredPersons = persons.filter((person) => {
         return person.name.toLowerCase().includes(filter.toLowerCase());
       });
