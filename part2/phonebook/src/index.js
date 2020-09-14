@@ -6,10 +6,9 @@ import axios from "axios";
 
 const App = () => {
   //state
-  const [persons, setPersons] = useState([{ id: 1, name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState("Loading");
   const [newName, setNewName] = useState("");
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
-  const [currId, setCurrId] = useState(4);
   const [filter, setFilter] = useState("");
   const [filterResult, setFilterResult] = useState([{}]);
 
@@ -36,14 +35,19 @@ const App = () => {
     if (exists) {
       alert(`${newName} already exists`);
     } else {
-      setPersons(
-        persons.concat({
-          id: currId,
+      axios
+        .post("http://localhost:3001/persons", {
           name: newName,
           number: newPhoneNumber,
         })
-      );
-      setCurrId(currId + 1);
+        .then(function (response) {
+          setPersons(persons.concat(response.data));
+          setNewName("");
+          setNewPhoneNumber("");
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   };
 
@@ -63,8 +67,11 @@ const App = () => {
       });
       return setFilterResult(filteredPersons);
     };
-
-    changeFilterResult();
+    if (persons !== "Loading") {
+      changeFilterResult();
+    } else {
+      setFilterResult([{ name: "Loading... Please wait" }]);
+    }
   }, [filter, persons]);
 
   return (
