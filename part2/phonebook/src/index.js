@@ -11,7 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [filter, setFilter] = useState("");
-  const [filterResult, setFilterResult] = useState([{}]);
+  const [filterResult, setFilterResult] = useState("");
 
   //helper functions
   const handleNameChange = (event) => {
@@ -62,8 +62,12 @@ const App = () => {
           setPersons(pr);
         }
       })
-      .catch((err) => {
-        return console.log(err);
+      .catch((err, db) => {
+        console.log(err);
+        db = axios.get("http://localhost:3001/persons");
+        db.then((res) => {
+          setPersons(res.data);
+        });
       });
   };
   //useEffect
@@ -85,7 +89,7 @@ const App = () => {
     if (persons !== "Loading") {
       changeFilterResult();
     } else {
-      setFilterResult([{ name: "Loading... Please wait" }]);
+      setFilterResult("Loading... Please wait");
     }
   }, [filter, persons]);
 
@@ -113,8 +117,11 @@ const App = () => {
         </button>
       </form>
       <h2>Numbers</h2>
-
-      <PersonsList persons={filterResult} delPerson={delPerson}></PersonsList>
+      {typeof filterResult === "object" ? (
+        <PersonsList persons={filterResult} delPerson={delPerson}></PersonsList>
+      ) : (
+        <div>Loading...</div>
+      )}
     </div>
   );
 };
