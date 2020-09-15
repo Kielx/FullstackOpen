@@ -53,23 +53,6 @@ const App = () => {
     }
   };
 
-  const delPerson = (id) => {
-    axios
-      .delete(`http://localhost:3001/persons/${id}`)
-      .then((response, pr) => {
-        if (response.status === 200 && response.statusText === "OK") {
-          pr = persons.filter((person) => person.id !== id);
-          setPersons(pr);
-        }
-      })
-      .catch((err, db) => {
-        console.log(err);
-        db = axios.get("http://localhost:3001/persons");
-        db.then((res) => {
-          setPersons(res.data);
-        });
-      });
-  };
   //useEffect
 
   useEffect(() => {
@@ -118,7 +101,10 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       {typeof filterResult === "object" ? (
-        <PersonsList persons={filterResult} delPerson={delPerson}></PersonsList>
+        <PersonsList
+          persons={filterResult}
+          setPersons={setPersons}
+        ></PersonsList>
       ) : (
         <div>Loading...</div>
       )}

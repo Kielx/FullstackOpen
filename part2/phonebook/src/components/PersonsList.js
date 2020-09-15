@@ -1,12 +1,19 @@
 import React from "react";
+import PersonsDBService from "./PersonsDBService";
 
-const PersonsList = ({ persons, delPerson }) => {
+const PersonsList = ({ persons, setPersons }) => {
   const newPersons = persons.map((person) => (
     <div key={person.id}>
       <li id={person.id}>
         {person.name} {person.number}
       </li>
-      <button onClick={() => delPerson(person.id)}>Delete</button>
+      <button
+        onClick={() => {
+          PersonsDBService.delPerson(person.id, persons, setPersons);
+        }}
+      >
+        Delete
+      </button>
     </div>
   ));
   return <ul>{newPersons}</ul>;
