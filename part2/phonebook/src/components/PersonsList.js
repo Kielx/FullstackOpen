@@ -1,10 +1,13 @@
 import React from "react";
 
-const PersonsList = ({ persons }) => {
+const PersonsList = ({ persons, delPerson }) => {
   const newPersons = persons.map((person) => (
-    <li key={Math.random()}>
-      {person.name} {person.number}
-    </li>
+    <div key={person.id}>
+      <li id={person.id}>
+        {person.name} {person.number}
+      </li>
+      <button onClick={() => delPerson(person.id)}>Delete</button>
+    </div>
   ));
   return <ul>{newPersons}</ul>;
 };

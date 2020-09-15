@@ -53,6 +53,19 @@ const App = () => {
     }
   };
 
+  const delPerson = (id) => {
+    axios
+      .delete(`http://localhost:3001/persons/${id}`)
+      .then((response, pr) => {
+        if (response.status === 200 && response.statusText === "OK") {
+          pr = persons.filter((person) => person.id !== id);
+          setPersons(pr);
+        }
+      })
+      .catch((err) => {
+        return console.log(err);
+      });
+  };
   //useEffect
 
   useEffect(() => {
@@ -64,7 +77,6 @@ const App = () => {
 
   useEffect(() => {
     const changeFilterResult = () => {
-      console.log(persons);
       let filteredPersons = persons.filter((person) => {
         return person.name.toLowerCase().includes(filter.toLowerCase());
       });
@@ -101,7 +113,8 @@ const App = () => {
         </button>
       </form>
       <h2>Numbers</h2>
-      <PersonsList persons={filterResult}></PersonsList>
+
+      <PersonsList persons={filterResult} delPerson={delPerson}></PersonsList>
     </div>
   );
 };
