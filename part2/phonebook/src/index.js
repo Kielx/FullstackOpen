@@ -27,14 +27,33 @@ const App = () => {
   };
   const handleNewNameAdd = (event) => {
     event.preventDefault();
+    let existingPerson;
     let exists = false;
     persons.forEach((person) => {
       if (Object.values(person).includes(newName)) {
         exists = true;
+        existingPerson = person;
       }
     });
     if (exists) {
-      alert(`${newName} already exists`);
+      if (
+        window.confirm(
+          `The name ${existingPerson.name} already exists, do you want to update the phone number for selected person?`
+        )
+      ) {
+        let res = axios.patch(
+          `http://localhost:3001/persons/${existingPerson.id}`,
+          { number: newPhoneNumber }
+        );
+        res.then((res) => {
+          let index = persons.indexOf(existingPerson);
+          let temp = [...persons];
+          temp[index] = res.data;
+          setPersons(temp);
+          setNewName("");
+          setNewPhoneNumber("");
+        });
+      }
     } else {
       const personObject = {
         name: newName,
