@@ -7,7 +7,7 @@ const create = (newObject) => {
   return request.then((response) => response.data);
 };
 
-const delPerson = (id, persons, setPersons) => {
+const delPerson = (id, persons, setPersons, setMessage) => {
   let personName;
   Object.values(persons).forEach((person) => {
     if (person.id === id) {
@@ -24,7 +24,14 @@ const delPerson = (id, persons, setPersons) => {
         }
       })
       .catch((err, db) => {
-        console.log(err);
+        setMessage({
+          message: `${personName} does not exist!`,
+          className: "alert alert-danger",
+        });
+        setTimeout(() => {
+          setMessage("");
+        }, 5000);
+
         db = axios.get(`${baseUrl}`);
         db.then((res) => {
           setPersons(res.data);

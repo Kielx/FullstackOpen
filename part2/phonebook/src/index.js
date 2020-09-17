@@ -4,6 +4,10 @@ import PersonsList from "./components/PersonsList";
 import Input from "./components/Input";
 import axios from "axios";
 import personsDBService from "./components/PersonsDBService";
+import Notification from "./components/Notification";
+import "./index.css";
+
+import Spinner from "react-bootstrap/Spinner";
 
 const App = () => {
   //state
@@ -12,6 +16,7 @@ const App = () => {
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [filter, setFilter] = useState("");
   const [filterResult, setFilterResult] = useState("");
+  const [message, setMessage] = useState("");
 
   //helper functions
   const handleNameChange = (event) => {
@@ -25,6 +30,7 @@ const App = () => {
   const handleFilter = (event) => {
     setFilter(event.target.value);
   };
+
   const handleNewNameAdd = (event) => {
     event.preventDefault();
     let existingPerson;
@@ -50,6 +56,15 @@ const App = () => {
           let temp = [...persons];
           temp[index] = res.data;
           setPersons(temp);
+
+          setMessage({
+            message: `${newName} phone number was updated to ${newPhoneNumber} successfully!`,
+            className: "alert alert-success",
+          });
+          setTimeout(() => {
+            setMessage("");
+          }, 5000);
+
           setNewName("");
           setNewPhoneNumber("");
         });
@@ -65,6 +80,14 @@ const App = () => {
           setPersons(persons.concat(response));
           setNewName("");
           setNewPhoneNumber("");
+
+          setMessage({
+            message: `${personObject.name} with phone number ${personObject.number} was successfully created`,
+            className: "alert alert-success",
+          });
+          setTimeout(() => {
+            setMessage("");
+          }, 5000);
         })
         .catch(function (error) {
           console.log(error);
@@ -91,7 +114,7 @@ const App = () => {
     if (persons !== "Loading") {
       changeFilterResult();
     } else {
-      setFilterResult("Loading... Please wait");
+      setFilterResult("");
     }
   }, [filter, persons]);
 
@@ -114,18 +137,29 @@ const App = () => {
           changeHandler={handleNewPhoneNumber}
           name={"Phone number:"}
         ></Input>
-        <button onClick={handleNewNameAdd} type="Submit">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleNewNameAdd}
+        >
           Add new phonebook record
         </button>
       </form>
       <h2>Numbers</h2>
+      <Notification
+        className={typeof message === "object" ? message.className : ""}
+        message={typeof message === "object" ? message.message : ""}
+      ></Notification>
       {typeof filterResult === "object" ? (
         <PersonsList
           persons={filterResult}
           setPersons={setPersons}
+          setMessage={setMessage}
         ></PersonsList>
       ) : (
-        <div>Loading...</div>
+        <Spinner animation="border" role="status">
+          <span className="sr-only">Loading...</span>
+        </Spinner>
       )}
     </div>
   );
