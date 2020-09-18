@@ -152,7 +152,8 @@ const App = () => {
       ></Notification>
       {typeof filterResult === "object" ? (
         <PersonsList
-          persons={filterResult}
+          persons={persons}
+          filteredPersons={filterResult}
           setPersons={setPersons}
           setMessage={setMessage}
         ></PersonsList>

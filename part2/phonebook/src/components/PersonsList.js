@@ -1,8 +1,8 @@
 import React from "react";
 import PersonsDBService from "./PersonsDBService";
 
-const PersonsList = ({ persons, setPersons, setMessage }) => {
-  const newPersons = persons.map((person) => (
+const PersonsList = ({ persons, filteredPersons, setPersons, setMessage }) => {
+  const newPersons = filteredPersons.map((person) => (
     <div key={person.id}>
       <li id={person.id}>
         {person.name} {person.number}
