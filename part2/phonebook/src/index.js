@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
+import axios from "axios";
+import "./index.css";
+import Spinner from "react-bootstrap/Spinner";
+
 import PersonsList from "./components/PersonsList";
 import Input from "./components/Input";
-import axios from "axios";
 import personsDBService from "./components/PersonsDBService";
 import Notification from "./components/Notification";
-import "./index.css";
-
-import Spinner from "react-bootstrap/Spinner";
 
 const App = () => {
   //state
-  const [persons, setPersons] = useState("Loading");
+  const [persons, setPersons] = useState("");
   const [newName, setNewName] = useState("");
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [filter, setFilter] = useState("");
@@ -19,6 +19,12 @@ const App = () => {
   const [message, setMessage] = useState("");
 
   //helper functions
+
+  const clearInputs = () => {
+    setNewName("");
+    setNewPhoneNumber("");
+  };
+
   const handleNameChange = (event) => {
     setNewName(event.target.value);
   };
@@ -41,34 +47,32 @@ const App = () => {
         existingPerson = person;
       }
     });
-    if (exists) {
-      if (
-        window.confirm(
-          `The name ${existingPerson.name} already exists, do you want to update the phone number for selected person?`
-        )
-      ) {
-        let res = axios.patch(
-          `http://localhost:3001/persons/${existingPerson.id}`,
-          { number: newPhoneNumber }
-        );
-        res.then((res) => {
-          let index = persons.indexOf(existingPerson);
-          let temp = [...persons];
-          temp[index] = res.data;
-          setPersons(temp);
+    if (
+      exists &&
+      window.confirm(
+        `The name ${existingPerson.name} already exists, do you want to update the phone number for selected person?`
+      )
+    ) {
+      let res = axios.patch(
+        `http://localhost:3001/persons/${existingPerson.id}`,
+        { number: newPhoneNumber }
+      );
+      res.then((res) => {
+        let index = persons.indexOf(existingPerson);
+        let temp = [...persons];
+        temp[index] = res.data;
+        setPersons(temp);
 
-          setMessage({
-            message: `${newName} phone number was updated to ${newPhoneNumber} successfully!`,
-            className: "alert alert-success",
-          });
-          setTimeout(() => {
-            setMessage("");
-          }, 5000);
-
-          setNewName("");
-          setNewPhoneNumber("");
+        setMessage({
+          message: `${newName} phone number was updated to ${newPhoneNumber} successfully!`,
+          className: "alert alert-success",
         });
-      }
+        setTimeout(() => {
+          setMessage("");
+        }, 5000);
+
+        clearInputs();
+      });
     } else {
       const personObject = {
         name: newName,
@@ -78,8 +82,7 @@ const App = () => {
         .create(personObject)
         .then(function (response) {
           setPersons(persons.concat(response));
-          setNewName("");
-          setNewPhoneNumber("");
+          clearInputs();
 
           setMessage({
             message: `${personObject.name} with phone number ${personObject.number} was successfully created`,
@@ -111,7 +114,7 @@ const App = () => {
       });
       return setFilterResult(filteredPersons);
     };
-    if (persons !== "Loading") {
+    if (persons) {
       changeFilterResult();
     } else {
       setFilterResult("");
