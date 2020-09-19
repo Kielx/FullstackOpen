@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
 import "./index.css";
+
 import Spinner from "react-bootstrap/Spinner";
+import Alert from "react-bootstrap/Alert";
 
 import PersonsList from "./components/PersonsList";
 import Input from "./components/Input";
 import personsDBService from "./components/PersonsDBService";
-import Notification from "./components/Notification";
+import Filter from "./components/Filter";
 
 const App = () => {
   //state
@@ -16,7 +18,8 @@ const App = () => {
   const [newPhoneNumber, setNewPhoneNumber] = useState("");
   const [filter, setFilter] = useState("");
   const [filterResult, setFilterResult] = useState("");
-  const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   //helper functions
 
@@ -31,10 +34,6 @@ const App = () => {
 
   const handleNewPhoneNumber = (event) => {
     setNewPhoneNumber(event.target.value);
-  };
-
-  const handleFilter = (event) => {
-    setFilter(event.target.value);
   };
 
   const handleNewNameAdd = (event) => {
@@ -53,48 +52,28 @@ const App = () => {
         `The name ${existingPerson.name} already exists, do you want to update the phone number for selected person?`
       )
     ) {
-      let res = axios.patch(
-        `http://localhost:3001/persons/${existingPerson.id}`,
-        { number: newPhoneNumber }
+      personsDBService.patchPersonNumber(
+        persons,
+        setPersons,
+        setSuccessMessage,
+        newPhoneNumber,
+        existingPerson,
+        newName
       );
-      res.then((res) => {
-        let index = persons.indexOf(existingPerson);
-        let temp = [...persons];
-        temp[index] = res.data;
-        setPersons(temp);
-
-        setMessage({
-          message: `${newName} phone number was updated to ${newPhoneNumber} successfully!`,
-          className: "alert alert-success",
-        });
-        setTimeout(() => {
-          setMessage("");
-        }, 5000);
-
-        clearInputs();
-      });
+      clearInputs();
     } else {
       const personObject = {
         name: newName,
         number: newPhoneNumber,
       };
-      personsDBService
-        .create(personObject)
-        .then(function (response) {
-          setPersons(persons.concat(response));
-          clearInputs();
-
-          setMessage({
-            message: `${personObject.name} with phone number ${personObject.number} was successfully created`,
-            className: "alert alert-success",
-          });
-          setTimeout(() => {
-            setMessage("");
-          }, 5000);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      personsDBService.create(
+        personObject,
+        persons,
+        setPersons,
+        setSuccessMessage,
+        personObject
+      );
+      clearInputs();
     }
   };
 
@@ -123,11 +102,7 @@ const App = () => {
 
   return (
     <div>
-      <Input
-        val={filter}
-        changeHandler={handleFilter}
-        name={"Filter results"}
-      ></Input>
+      <Filter filter={filter} setFilter={setFilter} />
       <h2>Phonebook</h2>
       <form>
         <Input
@@ -149,16 +124,16 @@ const App = () => {
         </button>
       </form>
       <h2>Numbers</h2>
-      <Notification
-        className={typeof message === "object" ? message.className : ""}
-        message={typeof message === "object" ? message.message : ""}
-      ></Notification>
+      {successMessage ? (
+        <Alert variant="success">{successMessage}</Alert>
+      ) : null}
+      {errorMessage ? <Alert variant="danger">{errorMessage}</Alert> : null}
       {typeof filterResult === "object" ? (
         <PersonsList
           persons={persons}
           filteredPersons={filterResult}
           setPersons={setPersons}
-          setMessage={setMessage}
+          setErrorMessage={setErrorMessage}
         ></PersonsList>
       ) : (
         <Spinner animation="border" role="status">

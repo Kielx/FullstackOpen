@@ -1,7 +1,12 @@
 import React from "react";
 import PersonsDBService from "./PersonsDBService";
 
-const PersonsList = ({ persons, filteredPersons, setPersons, setMessage }) => {
+const PersonsList = ({
+  persons,
+  filteredPersons,
+  setPersons,
+  setErrorMessage,
+}) => {
   const newPersons = filteredPersons.map((person) => (
     <div key={person.id}>
       <li id={person.id}>
@@ -15,7 +20,7 @@ const PersonsList = ({ persons, filteredPersons, setPersons, setMessage }) => {
             person.id,
             persons,
             setPersons,
-            setMessage
+            setErrorMessage
           );
         }}
       >

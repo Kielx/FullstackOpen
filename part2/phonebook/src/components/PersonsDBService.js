@@ -2,12 +2,31 @@ import axios from "axios";
 
 const baseUrl = "http://localhost:3001/persons";
 
-const create = (newObject) => {
+const create = (
+  newObject,
+  persons,
+  setPersons,
+  setSuccessMessage,
+  personObject
+) => {
   const request = axios.post(baseUrl, newObject);
-  return request.then((response) => response.data);
+  request
+    .then((response) => response.data)
+    .then(function (response) {
+      setPersons(persons.concat(response));
+      setSuccessMessage(
+        `${personObject.name} with phone number ${personObject.number} was successfully created`
+      );
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 5000);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 };
 
-const delPerson = (id, persons, setPersons, setMessage) => {
+const delPerson = (id, persons, setPersons, setErrorMessage) => {
   let personName;
   Object.values(persons).forEach((person) => {
     if (person.id === id) {
@@ -24,12 +43,9 @@ const delPerson = (id, persons, setPersons, setMessage) => {
         }
       })
       .catch((err, db) => {
-        setMessage({
-          message: `${personName} does not exist!`,
-          className: "alert alert-danger",
-        });
+        setErrorMessage(`${personName} does not exist!`);
         setTimeout(() => {
-          setMessage("");
+          setErrorMessage("");
         }, 5000);
 
         db = axios.get(`${baseUrl}`);
@@ -39,4 +55,31 @@ const delPerson = (id, persons, setPersons, setMessage) => {
       });
   }
 };
-export default { create, delPerson };
+
+const patchPersonNumber = (
+  persons,
+  setPersons,
+  setSuccessMessage,
+  newPhoneNumber,
+  existingPerson,
+  newName
+) => {
+  let res = axios.patch(`http://localhost:3001/persons/${existingPerson.id}`, {
+    number: newPhoneNumber,
+  });
+  res.then((res) => {
+    let index = persons.indexOf(existingPerson);
+    let temp = [...persons];
+    temp[index] = res.data;
+    setPersons(temp);
+
+    setSuccessMessage(
+      `${newName} phone number was updated to ${newPhoneNumber} successfully!`
+    );
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 5000);
+  });
+};
+
+export default { create, delPerson, patchPersonNumber };

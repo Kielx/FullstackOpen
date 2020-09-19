@@ -36,29 +36,9 @@
       "id": "8dbe3fbd-075b-4c63-9cf4-4ccbcae2cd9a"
     },
     {
-      "name": "Mckinney Spencer",
-      "number": "(856) 402-2326",
-      "id": "eec7ba42-d98b-4d18-8d74-6d761b245d39"
-    },
-    {
-      "name": "Fanny Morin",
-      "number": "(836) 447-2322",
-      "id": "a0ff961a-c405-4e08-8e0b-94d483ba9ac0"
-    },
-    {
-      "name": "Tyler Thornton",
-      "number": "(878) 424-2543",
-      "id": "aee30fe8-1820-4e3c-951a-4e64a3e96d4b"
-    },
-    {
       "name": "abc",
-      "number": "1222222",
-      "id": 5
-    },
-    {
-      "name": "asdf",
       "number": "123",
-      "id": 6
+      "id": 5
     }
   ]
 }
