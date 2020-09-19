@@ -7,7 +7,7 @@ import Spinner from "react-bootstrap/Spinner";
 import Alert from "react-bootstrap/Alert";
 
 import PersonsList from "./components/PersonsList";
-import Input from "./components/Input";
+import PhonebookForm from "./components/PhonebookForm";
 import personsDBService from "./components/PersonsDBService";
 import Filter from "./components/Filter";
 
@@ -26,14 +26,6 @@ const App = () => {
   const clearInputs = () => {
     setNewName("");
     setNewPhoneNumber("");
-  };
-
-  const handleNameChange = (event) => {
-    setNewName(event.target.value);
-  };
-
-  const handleNewPhoneNumber = (event) => {
-    setNewPhoneNumber(event.target.value);
   };
 
   const handleNewNameAdd = (event) => {
@@ -104,25 +96,13 @@ const App = () => {
     <div>
       <Filter filter={filter} setFilter={setFilter} />
       <h2>Phonebook</h2>
-      <form>
-        <Input
-          val={newName}
-          changeHandler={handleNameChange}
-          name={"Name:"}
-        ></Input>
-        <Input
-          val={newPhoneNumber}
-          changeHandler={handleNewPhoneNumber}
-          name={"Phone number:"}
-        ></Input>
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={handleNewNameAdd}
-        >
-          Add new phonebook record
-        </button>
-      </form>
+      <PhonebookForm
+        newName={newName}
+        newPhoneNumber={newPhoneNumber}
+        setNewName={setNewName}
+        setNewPhoneNumber={setNewPhoneNumber}
+        handleNewNameAdd={handleNewNameAdd}
+      ></PhonebookForm>
       <h2>Numbers</h2>
       {successMessage ? (
         <Alert variant="success">{successMessage}</Alert>
