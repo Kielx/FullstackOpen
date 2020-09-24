@@ -56,7 +56,7 @@ const App = () => {
     } else {
       const personObject = {
         name: newName,
-        number: newPhoneNumber,
+        phone: newPhoneNumber,
       };
       personsDBService.create(
         personObject,
@@ -72,7 +72,10 @@ const App = () => {
   //useEffect
 
   useEffect(() => {
-    let db = axios.get("http://localhost:3001/persons");
+    let db = axios.get(
+      "https://fullstackopen-phonebook-api.herokuapp.com/api/persons" ||
+        "http://localhost:3001/api/persons"
+    );
     db.then((res) => {
       setPersons(res.data);
     });

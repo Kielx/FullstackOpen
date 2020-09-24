@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const baseUrl = "http://localhost:3001/persons";
+const baseUrl =
+  "https://fullstackopen-phonebook-api.herokuapp.com/api/persons" ||
+  "http://localhost:3001/api/persons";
 
 const create = (
   newObject,
@@ -15,7 +17,7 @@ const create = (
     .then(function (response) {
       setPersons(persons.concat(response));
       setSuccessMessage(
-        `${personObject.name} with phone number ${personObject.number} was successfully created`
+        `${personObject.name} with phone number ${personObject.phone} was successfully created`
       );
       setTimeout(() => {
         setSuccessMessage("");
@@ -65,7 +67,7 @@ const patchPersonNumber = (
   newName
 ) => {
   let res = axios.patch(`http://localhost:3001/persons/${existingPerson.id}`, {
-    number: newPhoneNumber,
+    phone: newPhoneNumber,
   });
   res.then((res) => {
     let index = persons.indexOf(existingPerson);

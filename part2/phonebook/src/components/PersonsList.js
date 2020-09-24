@@ -10,7 +10,7 @@ const PersonsList = ({
   const newPersons = filteredPersons.map((person) => (
     <div key={person.id}>
       <li id={person.id}>
-        {person.name} {person.number}
+        {person.name} {person.phone}
       </li>
       <button
         type="button"
