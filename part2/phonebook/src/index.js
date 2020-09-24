@@ -72,10 +72,7 @@ const App = () => {
   //useEffect
 
   useEffect(() => {
-    let db = axios.get(
-      "https://fullstackopen-phonebook-api.herokuapp.com/api/persons" ||
-        "http://localhost:3001/api/persons"
-    );
+    let db = axios.get("/api/persons");
     db.then((res) => {
       setPersons(res.data);
     });
