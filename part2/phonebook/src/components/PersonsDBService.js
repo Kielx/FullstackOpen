@@ -7,12 +7,13 @@ const create = (
   persons,
   setPersons,
   setSuccessMessage,
+  setErrorMessage,
   personObject
 ) => {
   const request = axios.post(baseUrl, newObject);
   request
     .then((response) => response.data)
-    .then(function (response) {
+    .then((response) => {
       setPersons(persons.concat(response));
       setSuccessMessage(
         `${personObject.name} with phone number ${personObject.phone} was successfully created`
@@ -21,8 +22,11 @@ const create = (
         setSuccessMessage("");
       }, 5000);
     })
-    .catch(function (error) {
-      console.log(error);
+    .catch((error) => {
+      setErrorMessage("Data provided is invalid");
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 5000);
     });
 };
 

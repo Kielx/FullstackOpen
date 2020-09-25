@@ -63,6 +63,7 @@ const App = () => {
         persons,
         setPersons,
         setSuccessMessage,
+        setErrorMessage,
         personObject
       );
       clearInputs();
