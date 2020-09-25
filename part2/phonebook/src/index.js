@@ -20,8 +20,35 @@ const App = () => {
   const [filterResult, setFilterResult] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [isMessageDisplayed, setIsMessageDisplayed] = useState(false);
 
   //helper functions
+
+  const displayMessage = (messageType, message) => {
+    let msg = "";
+    switch (messageType) {
+      case "error":
+        msg = setErrorMessage;
+        setErrorMessage(message);
+        setSuccessMessage("");
+        break;
+      case "success":
+        msg = setSuccessMessage;
+        setSuccessMessage(message);
+        setErrorMessage("");
+        break;
+      default:
+        throw new Error("Invalid message type");
+    }
+    if (isMessageDisplayed) {
+      clearTimeout(isMessageDisplayed);
+    }
+    let timeout = setTimeout(() => {
+      msg("");
+      setIsMessageDisplayed(false);
+    }, 5000);
+    setIsMessageDisplayed(timeout);
+  };
 
   const clearInputs = () => {
     setNewName("");
@@ -62,8 +89,7 @@ const App = () => {
         personObject,
         persons,
         setPersons,
-        setSuccessMessage,
-        setErrorMessage,
+        displayMessage,
         personObject
       );
       clearInputs();

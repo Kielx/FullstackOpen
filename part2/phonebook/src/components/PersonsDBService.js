@@ -2,32 +2,23 @@ import axios from "axios";
 
 const baseUrl = "/api/persons" || "http://localhost:3001/api/persons";
 
-const create = (
+const create = async (
   newObject,
   persons,
   setPersons,
-  setSuccessMessage,
-  setErrorMessage,
+  displayMessage,
   personObject
 ) => {
-  const request = axios.post(baseUrl, newObject);
-  request
-    .then((response) => response.data)
-    .then((response) => {
-      setPersons(persons.concat(response));
-      setSuccessMessage(
-        `${personObject.name} with phone number ${personObject.phone} was successfully created`
-      );
-      setTimeout(() => {
-        setSuccessMessage("");
-      }, 5000);
-    })
-    .catch((error) => {
-      setErrorMessage("Data provided is invalid");
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 5000);
-    });
+  try {
+    const res = await axios.post(baseUrl, newObject);
+    setPersons(persons.concat(res.data));
+    displayMessage(
+      "success",
+      `${personObject.name} with phone number ${personObject.phone} was successfully created`
+    );
+  } catch (e) {
+    displayMessage("error", "Data provided is invalid");
+  }
 };
 
 const delPerson = (id, persons, setPersons, setErrorMessage) => {
