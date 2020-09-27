@@ -54,30 +54,39 @@ const delPerson = (id, persons, setPersons, displayMessage) => {
   }
 };
 
-const patchPersonNumber = (
+const patchPersonNumber = async (
   persons,
   setPersons,
-  setSuccessMessage,
+  displayMessage,
   newPhoneNumber,
-  existingPerson,
-  newName
+  existingPerson
 ) => {
-  let res = axios.patch(`http://localhost:3001/persons/${existingPerson.id}`, {
-    phone: newPhoneNumber,
-  });
-  res.then((res) => {
-    let index = persons.indexOf(existingPerson);
-    let temp = [...persons];
-    temp[index] = res.data;
-    setPersons(temp);
-
-    setSuccessMessage(
-      `${newName} phone number was updated to ${newPhoneNumber} successfully!`
+  let res;
+  try {
+    res = await axios.patch(`${baseUrl}/${existingPerson._id}`, {
+      phone: newPhoneNumber,
+    });
+    displayMessage(
+      "success",
+      `${existingPerson.name} phone number was successfully updated to ${newPhoneNumber}`
     );
-    setTimeout(() => {
-      setSuccessMessage("");
-    }, 5000);
-  });
+    let temp = [...persons];
+    temp.forEach((person) => {
+      if (person._id === res.data._id) {
+        person.phone = newPhoneNumber;
+      }
+    });
+    setPersons(temp);
+  } catch (e) {
+    displayMessage(
+      "error",
+      "Error ocurred while trying to change person number"
+    );
+    let db = axios.get(`${baseUrl}`);
+    db.then((res) => {
+      setPersons(res.data);
+    });
+  }
 };
 
 export default { create, delPerson, patchPersonNumber };

@@ -74,7 +74,7 @@ const App = () => {
       personsDBService.patchPersonNumber(
         persons,
         setPersons,
-        setSuccessMessage,
+        displayMessage,
         newPhoneNumber,
         existingPerson,
         newName
