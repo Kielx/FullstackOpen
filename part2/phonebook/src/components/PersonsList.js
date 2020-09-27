@@ -5,11 +5,11 @@ const PersonsList = ({
   persons,
   filteredPersons,
   setPersons,
-  setErrorMessage,
+  displayMessage,
 }) => {
   const newPersons = filteredPersons.map((person) => (
-    <div key={person.id}>
-      <li id={person.id}>
+    <div key={person._id}>
+      <li id={person._id}>
         {person.name} {person.phone}
       </li>
       <button
@@ -17,10 +17,10 @@ const PersonsList = ({
         className="btn btn-danger btn-sm"
         onClick={() => {
           PersonsDBService.delPerson(
-            person.id,
+            person._id,
             persons,
             setPersons,
-            setErrorMessage
+            displayMessage
           );
         }}
       >

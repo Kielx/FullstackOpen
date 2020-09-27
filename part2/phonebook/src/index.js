@@ -140,7 +140,7 @@ const App = () => {
           persons={persons}
           filteredPersons={filterResult}
           setPersons={setPersons}
-          setErrorMessage={setErrorMessage}
+          displayMessage={displayMessage}
         ></PersonsList>
       ) : (
         <Spinner animation="border" role="status">

@@ -21,11 +21,13 @@ const create = async (
   }
 };
 
-const delPerson = (id, persons, setPersons, setErrorMessage) => {
+const delPerson = (id, persons, setPersons, displayMessage) => {
   let personName;
+  let personPhone;
   Object.values(persons).forEach((person) => {
-    if (person.id === id) {
+    if (person._id === id) {
       personName = person.name;
+      personPhone = person.phone;
     }
   });
   if (window.confirm(`Do you really want to delete ${personName}?`)) {
@@ -33,15 +35,16 @@ const delPerson = (id, persons, setPersons, setErrorMessage) => {
       .delete(`${baseUrl}/${id}`)
       .then((response, pr) => {
         if (response.status === 200 && response.statusText === "OK") {
-          pr = persons.filter((person) => person.id !== id);
+          pr = persons.filter((person) => person._id !== id);
           setPersons(pr);
+          displayMessage(
+            "success",
+            `${personName} with phone number ${personPhone} was successfully deleted!`
+          );
         }
       })
       .catch((err, db) => {
-        setErrorMessage(`${personName} does not exist!`);
-        setTimeout(() => {
-          setErrorMessage("");
-        }, 5000);
+        displayMessage("error", `Selected user does not exist!`);
 
         db = axios.get(`${baseUrl}`);
         db.then((res) => {
